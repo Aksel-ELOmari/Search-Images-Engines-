@@ -74,12 +74,17 @@ searchBox.addEventListener('submit', async (e) => {
     defaultHero.innerHTML = '';
 });
 
-showMorebtn.addEventListener('click', async (e) => {
+// showMorebtn.addEventListener('click', async (e) => {
+//     e.preventDefault();
+//     page++;
+//     await SearchImages();
+// });
+
+document.onload = function() {
     e.preventDefault();
-    page++;
+    setInterval(function () {page++}, 1000);
     await SearchImages();
 });
-
 
 
 
