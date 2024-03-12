@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Footo_4U</title>
+    <link rel="stylesheet" href="/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./bootstrap-5.0.2-dist/css/bootstrap.css">
+</head>
+<body>
+
+  <style>
+   
+.post {
+  width: 400px;
+  font-family: 'Lexend', sans-serif;
+
+}
+
+.post-image {
+	display: block;
+	width: 100%;
+}
+.icon
+{
+  height: 40px;
+  width: 40px;
+}
+
+.post-ratings-container {
+	display: flex;
+	justify-content: end;
+	padding: 12px 0;
+}
+
+.post-rating {
+	display: flex;
+	align-items: center;
+	cursor: default;
+}
+
+.post-rating:not(:last-child) {
+	margin-right: 12px;
+}
+
+.post-rating-selected > .post-rating-button,
+.post-rating-selected > .post-rating-count {
+	color: #009578;
+}
+
+.post-rating-button {
+	margin-right: 6px;
+	cursor: pointer;
+	color: #555555;
+}
+
+.post-rating:not(.post-rating-selected) > .post-rating-button:hover {
+	color: #000000;
+}
+  </style>
+    <header>
+        <nav class="navbar bg-body-tertiary">
+            <div class="container-fluid">
+              <a class="navbar-brand">
+                <h1 class="logo">Testing_Code</h1>
+              </a>
+              <form class="d-flex" id="searchBox" role="search">
+                <input class="form-control me-2" id="search-input" type="search" placeholder="Search for an image" aria-label="Search">
+                <button class="btn btn-outline-success" id="search-btn"  type="submit">Search</button>
+              </form>
+            </div>
+        </nav>
+    </header>
+    <!-- ---------- carousel Start ----------- -->
+    <div id="carouselExampleCaptions" class="carousel slide">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+          <!-- <div class="carousel-item active">
+            <img src="..." class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+              <h5>First slide label</h5>
+              <p>Some representative placeholder content for the first slide.</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="..." class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Second slide label</h5>
+              <p>Some representative placeholder content for the second slide.</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="..." class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Third slide label</h5>
+              <p>Some representative placeholder content for the third slide.</p>
+            </div>
+          </div> -->
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <!-- ---------- carousel End ----------- -->
+
+
+  
+      <div class="post" data-post-id="7712">
+        <img class="post-image" src="./imgs/medium-shot-young-people-recording-podcast.jpg" alt="Post Image">
+        <div class="post-ratings-container">
+          <div class="post-rating">
+            <span class="post-rating-button material-icons"><img class="icon" src="./imgs/OIP-removebg-preview.png" alt="Post Image"></span>
+            <span class="post-rating-count">0</span>
+          </div>
+          <div class="post-rating">
+            <span class="post-rating-button material-icons"><img class="icon" src="./imgs/OIP__1_-removebg-preview.png" alt="Post Image"></span>
+            <span class="post-rating-count">0</span>
+          </div>
+        </div>
+      </div>
+      
+
+
+
+      <script>
+        document.querySelectorAll(".post").forEach(post => {
+    const postId = post.dataset.postId;
+    const ratings = post.querySelectorAll(".post-rating");
+    const likeRating = ratings[0];
+    ratings.forEach(rating => {
+      const button = rating.querySelector(".post-rating-button");
+      const count = rating.querySelector(".post-rating-count");
+      button.addEventListener("click", async () => {
+        if (rating.classList.contains("post-rating-selected")) {
+          return;
+        }
+        count.textContent = Number(count.textContent) + 1;
+        ratings.forEach(rating => {
+          if (rating.classList.contains("post-rating-selected")) {
+            const count = rating.querySelector(".post-rating-count");
+            count.textContent = Math.max(0, Number(count.textContent) - 1);
+            rating.classList.remove("post-rating-selected");
+          }
+        });
+
+        rating.classList.add("post-rating-selected");
+        const likeOrDislike = likeRating === rating ? "like" : "dislike";
+        const response = await fetch(`/posts/${postId}/${likeOrDislike}`);
+        const body = await response.json();
+      });
+    });
+  });
+      </script>
+    <script src="./testing.js"></script>
+</body>
+</html>
